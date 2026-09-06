@@ -2,11 +2,9 @@
 ### Edge-Vision Municipal Fleet Infrastructure Scanner
 
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-Vercel-black?style=for-the-badge&logo=vercel)](https://streetpulse-dashboard.vercel.app/)
-[![GitHub Pages](https://img.shields.io/badge/Mirror-GitHub%20Pages-24292e?style=for-the-badge&logo=github)](https://notpiyushc.github.io/StreetPulse/)
 [![Status](https://img.shields.io/badge/System-Operational-00ff88?style=for-the-badge)](https://streetpulse-dashboard.vercel.app/)
 
-> 🌐 **Official Live Dashboard:** [https://streetpulse-dashboard.vercel.app/](https://streetpulse-dashboard.vercel.app/)  
-> 🔗 **GitHub Pages Mirror:** [https://notpiyushc.github.io/StreetPulse/](https://notpiyushc.github.io/StreetPulse/)
+> 🌐 **Live Dashboard:** [https://streetpulse-dashboard.vercel.app/](https://streetpulse-dashboard.vercel.app/)
 
 ---
 
@@ -49,6 +47,5 @@ Open your browser at `http://localhost:3000`.
 
 ---
 
-## 🌐 Live Deployments
-- **Primary (Vercel):** [https://streetpulse-dashboard.vercel.app/](https://streetpulse-dashboard.vercel.app/)
-- **Secondary (GitHub Pages):** [https://notpiyushc.github.io/StreetPulse/](https://notpiyushc.github.io/StreetPulse/)
+## 🌐 Live Deployment
+- **Live Demo (Vercel):** [https://streetpulse-dashboard.vercel.app/](https://streetpulse-dashboard.vercel.app/)
