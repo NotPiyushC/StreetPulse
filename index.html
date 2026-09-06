@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StreetPulse — Edge Vision Infrastructure Network · Pune</title>
+  <meta name="description" content="StreetPulse transforms Pune's municipal fleet into a real-time infrastructure scanning network — detecting potholes, road damage, and urban hazards as they happen." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="night" id="app-body">
+
+<!-- ═══════════════════════════════════════════════════════
+     SIDEBAR
+═══════════════════════════════════════════════════════ -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-text">
+      <span class="logo-name">STREETPULSE</span>
+      <span class="logo-sub">EDGE VISION NETWORK</span>
+    </div>
+  </div>
+
+  <div class="sidebar-status">
+    <span class="status-dot pulse-dot"></span>
+    <span class="status-label">Pune network live</span>
+    <span class="status-time" id="sidebar-clock">00:00:00</span>
+  </div>
+
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">OPERATIONS</div>
+    <a class="nav-item active" id="nav-mission" href="#" onclick="setPage('mission'); return false;">
+      <svg class="nav-icon" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M10 2v2M10 16v2M2 10h2M16 10h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.5" opacity="0.4"/></svg>
+      Mission control
+      <span class="nav-badge" id="alert-badge">31</span>
+    </a>
+    <a class="nav-item" id="nav-fleet" href="#" onclick="setPage('fleet'); return false;">
+      <svg class="nav-icon" viewBox="0 0 20 20" fill="none"><rect x="2" y="7" width="14" height="8" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M16 10h2l1 3H16" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="5" cy="16" r="1.5" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="16" r="1.5" stroke="currentColor" stroke-width="1.5"/></svg>
+      Fleet overview
+    </a>
+    <a class="nav-item" id="nav-intel" href="#" onclick="setPage('intel'); return false;">
+      <svg class="nav-icon" viewBox="0 0 20 20" fill="none"><path d="M3 15 L7 9 L10 12 L13 6 L17 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="17" cy="10" r="2" fill="currentColor" opacity="0.7"/></svg>
+      Intelligence
+    </a>
+
+    <div class="nav-section-label" style="margin-top:20px">CITY LAYERS</div>
+    <a class="nav-item" id="nav-maplayers" href="#" onclick="toggleMapLayers(); return false;">
+      <svg class="nav-icon" viewBox="0 0 20 20" fill="none"><path d="M2 6l8-4 8 4-8 4-8-4z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M2 10l8 4 8-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M2 14l8 4 8-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/></svg>
+      Map layers
+      <svg class="nav-chevron" id="maplayers-chevron" viewBox="0 0 12 12" fill="none"><path d="M3 4.5l3 3 3-3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+    </a>
+    <div class="nav-sublayers" id="map-sublayers">
+      <label class="layer-toggle"><input type="checkbox" id="layer-routes" checked onchange="toggleLayer('routes')"><span class="layer-check"></span>Route overlays</label>
+      <label class="layer-toggle"><input type="checkbox" id="layer-detections" checked onchange="toggleLayer('detections')"><span class="layer-check"></span>Detections</label>
+      <label class="layer-toggle"><input type="checkbox" id="layer-heatmap" onchange="toggleLayer('heatmap')"><span class="layer-check"></span>Heat map</label>
+      <label class="layer-toggle"><input type="checkbox" id="layer-zones" onchange="toggleLayer('zones')"><span class="layer-check"></span>Zone boundaries</label>
+    </div>
+    <a class="nav-item" id="nav-priority" href="#" onclick="setPage('priority'); return false;">
+      <svg class="nav-icon" viewBox="0 0 20 20" fill="none"><path d="M10 2L12.5 8H18l-4.5 3.5 1.7 6L10 14l-5.2 3.5 1.7-6L2 8h5.5L10 2z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+      Priority zones
+    </a>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="network-health-card">
+      <div class="nh-header">
+        <span class="nh-dot"></span>
+        <span class="nh-label">Edge network</span>
+      </div>
+      <div class="nh-value" id="uptime-value">98.7<span>%</span></div>
+      <span class="nh-sub">uptime</span>
+      <div class="mini-bars" id="mini-bars"></div>
+    </div>
+    <div class="network-settings-link" onclick="openSettings()">
+      <svg viewBox="0 0 16 16" fill="none"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 2a5 5 0 110 10A5 5 0 018 3zm0 2a3 3 0 100 6 3 3 0 000-6z" fill="currentColor" opacity="0.7"/></svg>
+      Network settings
+    </div>
+    <div class="sidebar-user">
+      <div class="user-avatar">IN</div>
+      <div class="user-info">
+        <span class="user-name">Innovators</span>
+        <span class="user-role">City planning / Admin</span>
+      </div>
+      <svg viewBox="0 0 12 12" fill="none"><path d="M3 4.5l3 3 3-3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+    </div>
+  </div>
+</aside>
+
+<!-- ═══════════════════════════════════════════════════════
+     MAIN CONTENT
+═══════════════════════════════════════════════════════ -->
+<main class="main-content" id="main-content">
+
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <div class="topbar-breadcrumb">
+      <span class="breadcrumb-city">PUNE, MAHARASHTRA</span>
+      <span class="breadcrumb-sep">/</span>
+      <span class="breadcrumb-page" id="breadcrumb-page">MISSION CONTROL</span>
+    </div>
+    <div class="topbar-actions">
+      <button class="tb-btn" id="help-btn" onclick="showHelp()" title="Help">
+        <svg viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="7" stroke="currentColor" stroke-width="1.5"/><path d="M9 13v-1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M6.5 7a2.5 2.5 0 015 0c0 1.5-2.5 2-2.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </button>
+      <button class="tb-btn notif-btn-wrap" id="notif-btn" onclick="showNotifications()" title="Notifications">
+        <svg viewBox="0 0 18 18" fill="none"><path d="M9 2a5 5 0 00-5 5v3l-1.5 2.5h13L14 10V7a5 5 0 00-5-5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M7.5 15a1.5 1.5 0 003 0" stroke="currentColor" stroke-width="1.5"/></svg>
+        <span class="notif-dot"></span>
+      </button>
+      <button class="mode-toggle" id="mode-toggle-btn" onclick="toggleMode()">
+        <span id="mode-icon">🌙</span>
+        <span id="mode-label">NIGHT OPS</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ─── MISSION CONTROL PAGE ─── -->
+  <div class="page active" id="page-mission">
+
+    <!-- HERO SECTION -->
+    <section class="hero-section">
+      <div class="hero-live-indicator">
+        <span class="live-pulse"></span>
+        <span class="live-text">LIVE MUNICIPAL SCAN /</span>
+        <span class="live-time" id="hero-time">07:42 AM</span>
+      </div>
+      <div class="hero-headline">
+        <h1>See the city<br><em>as it moves.</em></h1>
+        <p class="hero-sub">StreetPulse turns everyday fleet routes into a living infrastructure map.</p>
+      </div>
+      <div class="hero-mission-id">
+        <div class="mission-id-label">MISSION ID / PM-042</div>
+        <div class="live-ring">
+          <div class="live-ring-inner">
+            <svg class="live-ring-svg" viewBox="0 0 60 60">
+              <circle cx="30" cy="30" r="26" fill="none" stroke="currentColor" stroke-width="2" opacity="0.2"/>
+              <circle cx="30" cy="30" r="26" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="163.4" stroke-dashoffset="40" class="live-arc"/>
+            </svg>
+            <span class="live-tag">LIVE</span>
+          </div>
+        </div>
+        <div class="last-sync">Last sync <span id="sync-counter">12 sec ago</span></div>
+      </div>
+    </section>
+
+    <!-- KPI METRICS ROW -->
+    <section class="metrics-row">
+      <div class="metric-card">
+        <div class="metric-icon">
+          <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5" stroke-dasharray="4 2"/><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="metric-info">
+          <div class="metric-label">Network health</div>
+          <div class="metric-value" id="m-health">98.7<span class="metric-unit">%</span></div>
+          <div class="metric-delta up">↑ +1.4%</div>
+        </div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-icon">
+          <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="1.5" stroke-dasharray="4 2"/><circle cx="12" cy="12" r="3" fill="currentColor" opacity="0.6"/></svg>
+        </div>
+        <div class="metric-info">
+          <div class="metric-label">Coverage today</div>
+          <div class="metric-value" id="m-coverage">68<span class="metric-unit">%</span></div>
+          <div class="metric-delta up">↑ +12.6%</div>
+        </div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-icon">
+          <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="3" stroke="currentColor" stroke-width="1.5"/><path d="M8 12h2l2-4 2 8 2-4h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="metric-info">
+          <div class="metric-label">Detections today</div>
+          <div class="metric-value" id="m-detections">247</div>
+          <div class="metric-delta up">↑ +38</div>
+        </div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-icon">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M3 12 Q7 6 12 12 Q17 18 21 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/><circle cx="21" cy="12" r="2" fill="currentColor" opacity="0.7"/></svg>
+        </div>
+        <div class="metric-info">
+          <div class="metric-label">Route distance</div>
+          <div class="metric-value" id="m-route">14.8<span class="metric-unit">km</span></div>
+          <div class="metric-delta neutral">↗ on target</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MAP + STREET VIEW ROW -->
+    <section class="map-streetview-row">
+      <!-- MAP PANEL -->
+      <div class="panel map-panel">
+        <div class="panel-header">
+          <div class="panel-header-left">
+            <div class="panel-tag">REAL-TIME GEOSPATIAL FEED</div>
+            <div class="panel-title">Baner–Aundh Loop / Route P-17</div>
+          </div>
+          <div class="panel-header-right">
+            <button class="map-btn" onclick="centerMap()">
+              <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="3" stroke="currentColor" stroke-width="1.3"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+              Center
+            </button>
+            <button class="map-btn" onclick="toggleLayers()">
+              <svg viewBox="0 0 16 16" fill="none"><path d="M2 4l6-3 6 3-6 3-6-3z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M2 8l6 3 6-3M2 12l6 3 6-3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" opacity="0.6"/></svg>
+              Layers
+            </button>
+          </div>
+        </div>
+        <div class="map-container" id="map-container">
+          <canvas id="map-canvas"></canvas>
+          <div class="map-overlay-tag">LIVE TILES · 18 FPS</div>
+          <div class="map-legend">
+            <span class="legend-item"><span class="legend-dot red"></span> Active vehicle</span>
+            <span class="legend-item"><span class="legend-dot amber"></span> Detection</span>
+            <span class="legend-item"><span class="legend-dot blue"></span> Scanned route</span>
+          </div>
+          <div class="map-scale">500 m</div>
+        </div>
+      </div>
+
+      <!-- RIGHT STACK -->
+      <div class="right-stack">
+        <!-- STREET VIEW PANEL -->
+        <div class="panel street-panel">
+          <div class="panel-header">
+            <div class="panel-header-left">
+              <div class="panel-tag">PUNE STREET FEED / JM ROAD</div>
+              <div class="panel-title">Street-level view</div>
+            </div>
+            <div class="rec-indicator">
+              <span class="rec-dot"></span> REC
+            </div>
+          </div>
+          <div class="street-view-container">
+            <div class="street-video-frame">
+              <canvas id="street-canvas"></canvas>
+              <div class="edge-overlay">
+                <div class="cam-hud-top">
+                  <span class="hud-tag">CAM 01 / JM</span>
+                  <span class="hud-time" id="cam-time">07:42:18</span>
+                  <span class="hud-tag">PT LOCK</span>
+                </div>
+                <div class="detection-boxes" id="detection-boxes"></div>
+                <div class="cam-hud-bottom">
+                  <span class="hud-conf" id="hud-conf">POTHOLE · 94%</span>
+                  <span class="hud-tag">EDGE MODEL 04</span>
+                  <span class="hud-det-count" id="hud-det-count">0 DETECTIONS</span>
+                  <span class="hud-tag">EDGE LINK</span>
+                </div>
+              </div>
+              <div class="play-drive-btn" id="play-drive-btn" onclick="toggleDrive()">
+                <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><polygon points="6,4 20,12 6,20" fill="currentColor"/></svg>
+                PLAY DRIVE
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ACTIVE VEHICLE PANEL -->
+        <div class="panel vehicle-panel">
+          <div class="vehicle-header">
+            <div class="panel-tag">ACTIVE VEHICLE</div>
+            <div class="standby-badge">
+              <span class="standby-dot"></span> STANDBY
+            </div>
+          </div>
+          <div class="vehicle-info">
+            <div class="vehicle-icon-wrap">
+              <svg viewBox="0 0 40 28" fill="none" width="40" height="28"><rect x="1" y="8" width="28" height="14" rx="3" fill="currentColor" opacity="0.15" stroke="currentColor" stroke-width="1.5"/><rect x="1" y="8" width="18" height="10" rx="2" fill="currentColor" opacity="0.25"/><path d="M29 14h8l2 5H29" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="8" cy="24" r="3" stroke="currentColor" stroke-width="1.5"/><circle cx="22" cy="24" r="3" stroke="currentColor" stroke-width="1.5"/><circle cx="34" cy="24" r="3" stroke="currentColor" stroke-width="1.5"/></svg>
+            </div>
+            <div class="vehicle-details">
+              <div class="vehicle-name">FLEET-042 – Garbage route</div>
+              <div class="vehicle-route">P-17 / Baner–Aundh Loop · <span id="stops-remaining">6 stops remaining</span></div>
+            </div>
+          </div>
+          <div class="vehicle-specs">
+            <div class="spec-item">
+              <div class="spec-label">EDGE DEVICE</div>
+              <div class="spec-value">PI 04 / CORAL</div>
+            </div>
+            <div class="spec-item">
+              <div class="spec-label">BATTERY</div>
+              <div class="spec-value"><span id="battery-pct">🔋 84%</span></div>
+            </div>
+            <div class="spec-item">
+              <div class="spec-label">LATENCY</div>
+              <div class="spec-value" id="latency-val">42 ms</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ALERTS SECTION -->
+    <section class="alerts-section">
+      <div class="alerts-header">
+        <div class="alerts-header-left">
+          <div class="alerts-feed-tag">PUNE INFRASTRUCTURE FEED · <span class="streaming-tag">STREAMING</span></div>
+          <h2 class="alerts-title">Infrastructure alerts</h2>
+        </div>
+        <div class="alerts-header-right">
+          <select class="filter-select" id="alert-filter" onchange="filterAlerts()">
+            <option value="all">All alerts</option>
+            <option value="pothole">Potholes</option>
+            <option value="road crack">Road cracks</option>
+            <option value="missing sign">Missing signs</option>
+            <option value="overflowing bin">Overflowing bins</option>
+            <option value="damaged curb">Damaged curbs</option>
+            <option value="blocked drain">Blocked drains</option>
+          </select>
+          <button class="export-btn" onclick="exportAlerts()">
+            Export report
+            <svg viewBox="0 0 14 14" fill="none" width="12" height="12"><path d="M7 1v8M4 6l3 3 3-3M2 11h10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="alerts-table-wrapper">
+        <table class="alerts-table">
+          <thead>
+            <tr>
+              <th>ISSUE</th>
+              <th>LOCATION</th>
+              <th>DETECTED</th>
+              <th>SIZE / STATUS</th>
+              <th>SEVERITY</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="alerts-tbody"></tbody>
+        </table>
+      </div>
+
+      <div class="alerts-footer">
+        <div class="alerts-footer-left">
+          <span class="alerts-count-label" id="alerts-count-label">Showing 5 of 247 detections</span>
+          <a href="#" class="view-all-link" onclick="loadMoreAlerts(); return false;">View all alerts ↗</a>
+        </div>
+        <span class="auto-refresh-label">Auto-refreshing <span class="auto-refresh-dot"></span></span>
+      </div>
+    </section>
+
+    <!-- IMPACT METRICS -->
+    <section class="impact-section">
+      <div class="impact-card">
+        <div class="impact-icon cyan-icon">
+          <svg viewBox="0 0 32 32" fill="none"><path d="M4 16h6l3-8 4 16 3-8h8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="impact-info">
+          <div class="impact-value">94.7<span class="impact-unit">%</span></div>
+          <div class="impact-label">Bandwidth saved</div>
+          <div class="impact-sub">vs raw video streaming</div>
+        </div>
+      </div>
+      <div class="impact-card">
+        <div class="impact-icon orange-icon">
+          <svg viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="12" stroke="currentColor" stroke-width="2"/><path d="M16 8v8l5 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </div>
+        <div class="impact-info">
+          <div class="impact-value">2.3<span class="impact-unit">hr</span></div>
+          <div class="impact-label">Avg. response time</div>
+          <div class="impact-sub">from detection to dispatch</div>
+        </div>
+      </div>
+      <div class="impact-card">
+        <div class="impact-icon green-icon">
+          <svg viewBox="0 0 32 32" fill="none"><path d="M6 16l6 6L26 8" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="impact-info">
+          <div class="impact-value">183</div>
+          <div class="impact-label">Issues resolved</div>
+          <div class="impact-sub">this month · Pune PMC</div>
+        </div>
+      </div>
+      <div class="impact-card">
+        <div class="impact-icon purple-icon">
+          <svg viewBox="0 0 32 32" fill="none"><rect x="4" y="4" width="24" height="24" rx="4" stroke="currentColor" stroke-width="2"/><path d="M10 16h12M16 10v12" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.6"/></svg>
+        </div>
+        <div class="impact-info">
+          <div class="impact-value">₹18.4<span class="impact-unit">L</span></div>
+          <div class="impact-label">Cost efficiency gain</div>
+          <div class="impact-sub">estimated annual savings</div>
+        </div>
+      </div>
+    </section>
+
+  </div><!-- /page-mission -->
+
+  <!-- ─── FLEET OVERVIEW PAGE ─── -->
+  <div class="page" id="page-fleet">
+    <section class="hero-section">
+      <div class="hero-live-indicator">
+        <span class="live-pulse"></span>
+        <span class="live-text">FLEET STATUS / PUNE MUNICIPAL</span>
+      </div>
+      <div class="hero-headline">
+        <h1>Fleet<br><em>Command.</em></h1>
+        <p class="hero-sub">12 vehicles active across 7 zones in Pune today.</p>
+      </div>
+    </section>
+    <section class="fleet-grid" id="fleet-grid"></section>
+  </div>
+
+  <!-- ─── INTELLIGENCE PAGE ─── -->
+  <div class="page" id="page-intel">
+    <section class="hero-section">
+      <div class="hero-live-indicator">
+        <span class="live-pulse"></span>
+        <span class="live-text">ANALYTICS / AI INSIGHTS</span>
+      </div>
+      <div class="hero-headline">
+        <h1>City<br><em>Intelligence.</em></h1>
+        <p class="hero-sub">Pattern analysis and predictive maintenance for Pune's road network.</p>
+      </div>
+    </section>
+    <section class="intel-grid" id="intel-grid"></section>
+  </div>
+
+  <!-- ─── PRIORITY ZONES PAGE ─── -->
+  <div class="page" id="page-priority">
+    <section class="hero-section">
+      <div class="hero-live-indicator">
+        <span class="live-pulse"></span>
+        <span class="live-text">PRIORITY ZONES / PUNE</span>
+      </div>
+      <div class="hero-headline">
+        <h1>Priority<br><em>Zones.</em></h1>
+        <p class="hero-sub">High-severity infrastructure zones requiring immediate PMC attention.</p>
+      </div>
+    </section>
+    <section class="zones-grid" id="zones-grid"></section>
+  </div>
+
+  <!-- BOTTOM BAR -->
+  <footer class="bottom-bar">
+    <span>STREETPULSE / A CITY THAT CAN SEE ITSELF</span>
+    <span>DATA IS LIGHTWEIGHT. IMPACT IS NOT.</span>
+  </footer>
+
+</main><!-- /main-content -->
+
+<!-- NOTIFICATIONS PANEL -->
+<div class="side-panel hidden" id="notif-panel">
+  <div class="side-panel-header">
+    <span>Notifications</span>
+    <button onclick="closeNotifications()">✕</button>
+  </div>
+  <div class="notif-list" id="notif-list"></div>
+</div>
+
+<!-- HELP PANEL -->
+<div class="side-panel hidden" id="help-panel">
+  <div class="side-panel-header">
+    <span>StreetPulse Help</span>
+    <button onclick="closeHelp()">✕</button>
+  </div>
+  <div class="help-content">
+    <h3>Mission Control</h3>
+    <p>Real-time view of all active edge-AI scanning vehicles in Pune. Watch as detections populate the map in real time.</p>
+    <h3>Map Controls</h3>
+    <p><strong>Center:</strong> Re-center the map on the active fleet vehicle.<br><strong>Layers:</strong> Toggle route, detection, and heatmap overlays.</p>
+    <h3>Street-Level View</h3>
+    <p>Simulated edge-camera feed from FLEET-042 on JM Road. Click PLAY DRIVE to start detection playback.</p>
+    <h3>Alert Dispatch</h3>
+    <p>Click the dispatch icon (↗) on any alert to create a PMC maintenance work order.</p>
+    <h3>Export</h3>
+    <p>Use Export Report to download all current alerts as a JSON file for PMC integration.</p>
+  </div>
+</div>
+
+<!-- DISPATCH MODAL -->
+<div class="modal-overlay hidden" id="dispatch-modal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <span>Create Dispatch Work Order</span>
+      <button onclick="closeDispatch()">✕</button>
+    </div>
+    <div class="modal-body" id="dispatch-body"></div>
+    <div class="modal-footer">
+      <button class="modal-btn-cancel" onclick="closeDispatch()">Cancel</button>
+      <button class="modal-btn-confirm" onclick="confirmDispatch()">Dispatch →</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast hidden" id="toast"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
