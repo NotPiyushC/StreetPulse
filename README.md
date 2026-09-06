@@ -1,8 +1,8 @@
 # StreetPulse 🚦
 ### Edge-Vision Municipal Fleet Infrastructure Scanner
 
-> **Live Demo:** [https://notpiyushc.github.io/StreetPulse/](https://notpiyushc.github.io/StreetPulse/)  
-> *(Deploy via GitHub Pages from the `main` branch)*
+> **GitHub Pages Live Demo:** [https://notpiyushc.github.io/StreetPulse/](https://notpiyushc.github.io/StreetPulse/)  
+> **Vercel Deploy:** [Deploy with Vercel](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FNotPiyushC%2FStreetPulse)
 
 ---
 
