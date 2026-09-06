@@ -43,7 +43,7 @@ python -m http.server 3000
 # or
 npx serve
 ```
-Open your browser at `http://localhost:3000`.
+
 
 ---
 
