@@ -1,8 +1,12 @@
 # StreetPulse 🚦
 ### Edge-Vision Municipal Fleet Infrastructure Scanner
 
-> **GitHub Pages Live Demo:** [https://notpiyushc.github.io/StreetPulse/](https://notpiyushc.github.io/StreetPulse/)  
-> **Vercel Deploy:** [Deploy with Vercel](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FNotPiyushC%2FStreetPulse)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Vercel-black?style=for-the-badge&logo=vercel)](https://streetpulse-dashboard.vercel.app/)
+[![GitHub Pages](https://img.shields.io/badge/Mirror-GitHub%20Pages-24292e?style=for-the-badge&logo=github)](https://notpiyushc.github.io/StreetPulse/)
+[![Status](https://img.shields.io/badge/System-Operational-00ff88?style=for-the-badge)](https://streetpulse-dashboard.vercel.app/)
+
+> 🌐 **Official Live Dashboard:** [https://streetpulse-dashboard.vercel.app/](https://streetpulse-dashboard.vercel.app/)  
+> 🔗 **GitHub Pages Mirror:** [https://notpiyushc.github.io/StreetPulse/](https://notpiyushc.github.io/StreetPulse/)
 
 ---
 
@@ -45,9 +49,6 @@ Open your browser at `http://localhost:3000`.
 
 ---
 
-## 🌐 Permanent Deployment (GitHub Pages)
-1. Fork or push this repository to your GitHub account.
-2. Navigate to **Settings** > **Pages**.
-3. Under **Source**, choose **Deploy from a branch**.
-4. Select `main` branch and `/ (root)` folder, then click **Save**.
-5. Your live app will be published at `https://<username>.github.io/StreetPulse/`.
+## 🌐 Live Deployments
+- **Primary (Vercel):** [https://streetpulse-dashboard.vercel.app/](https://streetpulse-dashboard.vercel.app/)
+- **Secondary (GitHub Pages):** [https://notpiyushc.github.io/StreetPulse/](https://notpiyushc.github.io/StreetPulse/)
